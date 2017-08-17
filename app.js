@@ -35,12 +35,14 @@ bot.dialog('打招呼', function (session) {
 });
 
 bot.dialog('打開家電', function (session) {
+    session.send('嗨!你好喔，我猜你是要開家電對吧?');
     // session.endDialog('嗨!你好喔，我猜你是要開家電對吧?');
 }).triggerAction({
     matches: '打開家電'
 });
 
 bot.dialog('詢問位置', function (session) {
+    session.send('好喔, 前面直走右轉就是了啦!');
     // session.endDialog('好喔, 前面直走右轉就是了啦!');
 }).triggerAction({
     matches: '詢問位置'
