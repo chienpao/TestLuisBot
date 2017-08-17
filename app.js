@@ -27,9 +27,9 @@ var bot = new builder.UniversalBot(connector, function (session) {
 var recognizer = new builder.LuisRecognizer(process.env.LUIS_MODEL_URL);
 bot.recognizer(recognizer);
 
-bot.dialog('Hello', function (session) {
-    // session.send('嗨!你好喔，我是女媧出廠的米寶機器人!');
-    session.endDialog('嗨!你好喔，我是女媧出廠的米寶機器人!');
+bot.dialog('打招呼', function (session) {
+    session.send('嗨!你好喔，我是女媧出廠的米寶機器人!');
+    // session.endDialog('嗨!你好喔，我是女媧出廠的米寶機器人!');
 }).triggerAction({
     matches: '打招呼'
 });
