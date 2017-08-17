@@ -13,8 +13,8 @@ server.listen(process.env.port || process.env.PORT || 3978, function () {
 });
 // Create connector and listen for messages
 var connector = new builder.ChatConnector({
-    appId: process.env.MICROSOFT_APP_ID,
-    appPassword: process.env.MICROSOFT_APP_PASSWORD
+    appId: '15f2023e-6a18-418d-8035-5cb8d4aa94f8',
+    appPassword: 'AWYYyyv2Uy9tE4L1diTxXzH'
 });
 server.post('/api/messages', connector.listen());
 
@@ -27,84 +27,102 @@ var bot = new builder.UniversalBot(connector, function (session) {
 var recognizer = new builder.LuisRecognizer(process.env.LUIS_MODEL_URL);
 bot.recognizer(recognizer);
 
-bot.dialog('SearchHotels', [
-    function (session, args, next) {
-        session.send('Welcome to the Hotels finder! We are analyzing your message: \'%s\'', session.message.text);
-
-        // try extracting entities
-        var cityEntity = builder.EntityRecognizer.findEntity(args.intent.entities, 'builtin.geography.city');
-        var airportEntity = builder.EntityRecognizer.findEntity(args.intent.entities, 'AirportCode');
-        if (cityEntity) {
-            // city entity detected, continue to next step
-            session.dialogData.searchType = 'city';
-            next({ response: cityEntity.entity });
-        } else if (airportEntity) {
-            // airport entity detected, continue to next step
-            session.dialogData.searchType = 'airport';
-            next({ response: airportEntity.entity });
-        } else {
-            // no entities detected, ask user for a destination
-            builder.Prompts.text(session, 'Please enter your destination');
-        }
-    },
-    function (session, results) {
-        var destination = results.response;
-
-        var message = 'Looking for hotels';
-        if (session.dialogData.searchType === 'airport') {
-            message += ' near %s airport...';
-        } else {
-            message += ' in %s...';
-        }
-
-        session.send(message, destination);
-
-        // Async search
-        Store
-            .searchHotels(destination)
-            .then(function (hotels) {
-                // args
-                session.send('I found %d hotels:', hotels.length);
-
-                var message = new builder.Message()
-                    .attachmentLayout(builder.AttachmentLayout.carousel)
-                    .attachments(hotels.map(hotelAsAttachment));
-
-                session.send(message);
-
-                // End
-                session.endDialog();
-            });
-    }
-]).triggerAction({
-    matches: 'SearchHotels',
-    onInterrupted: function (session) {
-        session.send('Please provide a destination');
-    }
-});
-
-bot.dialog('ShowHotelsReviews', function (session, args) {
-    // retrieve hotel name from matched entities
-    var hotelEntity = builder.EntityRecognizer.findEntity(args.intent.entities, 'Hotel');
-    if (hotelEntity) {
-        session.send('Looking for reviews of \'%s\'...', hotelEntity.entity);
-        Store.searchHotelReviews(hotelEntity.entity)
-            .then(function (reviews) {
-                var message = new builder.Message()
-                    .attachmentLayout(builder.AttachmentLayout.carousel)
-                    .attachments(reviews.map(reviewAsAttachment));
-                session.endDialog(message);
-            });
-    }
+bot.dialog('打招呼', function (session) {
+    session.endDialog('嗨!你好喔，我是女媧出廠的米寶機器人!');
 }).triggerAction({
-    matches: 'ShowHotelsReviews'
+    matches: '打招呼'
 });
 
-bot.dialog('Help', function (session) {
-    session.endDialog('Hi! Try asking me things like \'search hotels in Seattle\', \'search hotels near LAX airport\' or \'show me the reviews of The Bot Resort\'');
+bot.dialog('打開家電', function (session) {
+    session.endDialog('嗨!你好喔，我猜你是要開家電對吧?');
 }).triggerAction({
-    matches: 'Help'
+    matches: '打開家電'
 });
+
+bot.dialog('詢問位置', function (session) {
+    session.endDialog('好喔, 前面直走右轉就是了啦!');
+}).triggerAction({
+    matches: '詢問位置'
+});
+
+// bot.dialog('SearchHotels', [
+//     function (session, args, next) {
+//         session.send('Welcome to the Hotels finder! We are analyzing your message: \'%s\'', session.message.text);
+
+//         // try extracting entities
+//         var cityEntity = builder.EntityRecognizer.findEntity(args.intent.entities, 'builtin.geography.city');
+//         var airportEntity = builder.EntityRecognizer.findEntity(args.intent.entities, 'AirportCode');
+//         if (cityEntity) {
+//             // city entity detected, continue to next step
+//             session.dialogData.searchType = 'city';
+//             next({ response: cityEntity.entity });
+//         } else if (airportEntity) {
+//             // airport entity detected, continue to next step
+//             session.dialogData.searchType = 'airport';
+//             next({ response: airportEntity.entity });
+//         } else {
+//             // no entities detected, ask user for a destination
+//             builder.Prompts.text(session, 'Please enter your destination');
+//         }
+//     },
+//     function (session, results) {
+//         var destination = results.response;
+
+//         var message = 'Looking for hotels';
+//         if (session.dialogData.searchType === 'airport') {
+//             message += ' near %s airport...';
+//         } else {
+//             message += ' in %s...';
+//         }
+
+//         session.send(message, destination);
+
+//         // Async search
+//         Store
+//             .searchHotels(destination)
+//             .then(function (hotels) {
+//                 // args
+//                 session.send('I found %d hotels:', hotels.length);
+
+//                 var message = new builder.Message()
+//                     .attachmentLayout(builder.AttachmentLayout.carousel)
+//                     .attachments(hotels.map(hotelAsAttachment));
+
+//                 session.send(message);
+
+//                 // End
+//                 session.endDialog();
+//             });
+//     }
+// ]).triggerAction({
+//     matches: 'SearchHotels',
+//     onInterrupted: function (session) {
+//         session.send('Please provide a destination');
+//     }
+// });
+
+// bot.dialog('ShowHotelsReviews', function (session, args) {
+//     // retrieve hotel name from matched entities
+//     var hotelEntity = builder.EntityRecognizer.findEntity(args.intent.entities, 'Hotel');
+//     if (hotelEntity) {
+//         session.send('Looking for reviews of \'%s\'...', hotelEntity.entity);
+//         Store.searchHotelReviews(hotelEntity.entity)
+//             .then(function (reviews) {
+//                 var message = new builder.Message()
+//                     .attachmentLayout(builder.AttachmentLayout.carousel)
+//                     .attachments(reviews.map(reviewAsAttachment));
+//                 session.endDialog(message);
+//             });
+//     }
+// }).triggerAction({
+//     matches: 'ShowHotelsReviews'
+// });
+
+// bot.dialog('Help', function (session) {
+//     session.endDialog('Hi! Try asking me things like \'search hotels in Seattle\', \'search hotels near LAX airport\' or \'show me the reviews of The Bot Resort\'');
+// }).triggerAction({
+//     matches: 'Help'
+// });
 
 // Spell Check
 if (process.env.IS_SPELL_CORRECTION_ENABLED === 'true') {
