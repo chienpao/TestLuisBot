@@ -27,20 +27,21 @@ var bot = new builder.UniversalBot(connector, function (session) {
 var recognizer = new builder.LuisRecognizer(process.env.LUIS_MODEL_URL);
 bot.recognizer(recognizer);
 
-bot.dialog('打招呼', function (session) {
+bot.dialog('Hello', function (session) {
+    // session.send('嗨!你好喔，我是女媧出廠的米寶機器人!');
     session.endDialog('嗨!你好喔，我是女媧出廠的米寶機器人!');
 }).triggerAction({
     matches: '打招呼'
 });
 
 bot.dialog('打開家電', function (session) {
-    session.endDialog('嗨!你好喔，我猜你是要開家電對吧?');
+    // session.endDialog('嗨!你好喔，我猜你是要開家電對吧?');
 }).triggerAction({
     matches: '打開家電'
 });
 
 bot.dialog('詢問位置', function (session) {
-    session.endDialog('好喔, 前面直走右轉就是了啦!');
+    // session.endDialog('好喔, 前面直走右轉就是了啦!');
 }).triggerAction({
     matches: '詢問位置'
 });
