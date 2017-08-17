@@ -19,7 +19,7 @@ var connector = new builder.ChatConnector({
 server.post('/api/messages', connector.listen());
 
 var bot = new builder.UniversalBot(connector, function (session) {
-    session.send('Sorry, I did not understand \'%s\'. Type \'help\' if you need assistance.', session.message.text);
+    session.send('Sorry, I did not understand \'%s\' \'%s\'. Type \'help\' if you need assistance.', session.message.text, process.env.LUIS_MODEL_URL);
 });
 
 // You can provide your own model by specifing the 'LUIS_MODEL_URL' environment variable
