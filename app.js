@@ -29,23 +29,26 @@ bot.recognizer(recognizer);
 
 bot.dialog('打招呼', function (session) {
     session.send('嗨!你好喔，我是女媧出廠的米寶機器人!');
-    // session.endDialog('嗨!你好喔，我是女媧出廠的米寶機器人!');
 }).triggerAction({
     matches: '打招呼'
 });
 
 bot.dialog('打開家電', function (session) {
     session.send('嗨!你好喔，我猜你是要開家電對吧?');
-    // session.endDialog('嗨!你好喔，我猜你是要開家電對吧?');
 }).triggerAction({
     matches: '打開家電'
 });
 
 bot.dialog('詢問位置', function (session) {
     session.send('好喔, 前面直走右轉就是了啦!');
-    // session.endDialog('好喔, 前面直走右轉就是了啦!');
 }).triggerAction({
     matches: '詢問位置'
+});
+
+bot.dialog('點餐', function (session) {
+    session.send('沒問題喔, 想點餐我馬上幫你準備!');
+}).triggerAction({
+    matches: '點餐'
 });
 
 // bot.dialog('SearchHotels', [
